@@ -1,5 +1,4 @@
 import { InlineKeyboard } from "grammy";
-import { bot } from ".";
 
 export const startKeyboard = new InlineKeyboard()
   .text("ИИ-психолог", "ai-therapist")
