@@ -1,6 +1,6 @@
 import type { MessageRole } from "./generated/prisma/enums";
 import { prisma } from "./prisma";
-import type { User } from "./types";
+import type { User } from "./defenitions";
 
 export async function createUser(user: User) {
   return await prisma.user.upsert({

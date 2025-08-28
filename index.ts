@@ -1,10 +1,9 @@
 import { Bot } from "grammy";
 import { startKeyboard } from "./keyboards";
 import { aiTherapistHandler } from "./callback-handlers";
-import type { User } from "./types";
+import type { User } from "./defenitions";
 import { createUser, saveMessage } from "./queries";
 import { getResponse } from "./ai";
-import { prisma } from "./prisma";
 
 const BOT_API = process.env.BOT_API;
 if (!BOT_API) {
