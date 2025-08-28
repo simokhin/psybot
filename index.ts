@@ -1,14 +1,17 @@
 import { Bot } from "grammy";
 import { startKeyboard } from "./keyboards";
 import { aiTherapistHandler } from "./callback-handlers";
-import { prisma } from "./prisma";
 import type { User } from "./types";
 import { createUser } from "./queries";
 
-const BOT_API = process.env.BOT_API || "";
+const BOT_API = process.env.BOT_API;
+if (!BOT_API) {
+  throw new Error("BOT_API is not defined");
+}
 
 export const bot = new Bot(BOT_API);
 
+// command handlers
 bot.command("start", async (ctx) => {
   const user: User = {
     telegramId: ctx.from?.id?.toString() || "",
@@ -27,6 +30,7 @@ bot.command("start", async (ctx) => {
   );
 });
 
+// message handlers
 bot.on("message", (ctx) => ctx.reply("You said: " + ctx.message.text));
 
 // callback handlers
