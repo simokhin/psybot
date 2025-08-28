@@ -1,3 +1,4 @@
+import type { MessageRole } from "./generated/prisma/enums";
 import { prisma } from "./prisma";
 import type { User } from "./types";
 
@@ -14,6 +15,27 @@ export async function createUser(user: User) {
       username: user.username,
       firstName: user.firstName,
       lastName: user.lastName,
+    },
+  });
+}
+
+export async function getUserMessages(userId: string) {
+  return await prisma.message.findMany({
+    where: { telegramId: userId },
+    orderBy: { createdAt: "asc" },
+  });
+}
+
+export async function saveMessage(
+  userId: string,
+  role: MessageRole,
+  content: string
+) {
+  return await prisma.message.create({
+    data: {
+      telegramId: userId,
+      role: role,
+      content: content,
     },
   });
 }

@@ -2,7 +2,9 @@ import { Bot } from "grammy";
 import { startKeyboard } from "./keyboards";
 import { aiTherapistHandler } from "./callback-handlers";
 import type { User } from "./types";
-import { createUser } from "./queries";
+import { createUser, saveMessage } from "./queries";
+import { getResponse } from "./ai";
+import { prisma } from "./prisma";
 
 const BOT_API = process.env.BOT_API;
 if (!BOT_API) {
@@ -31,9 +33,23 @@ bot.command("start", async (ctx) => {
 });
 
 // message handlers
-bot.on("message", (ctx) => ctx.reply("You said: " + ctx.message.text));
+bot.on("message", async (ctx) => {
+  const userId = ctx.from?.id?.toString() || "";
+
+  // save user message
+  const message: string = ctx.message.text || "";
+  await saveMessage(userId, "user", message);
+
+  // get and save AI response
+  const response = await getResponse(userId, message);
+  await saveMessage(userId, "assistant", response);
+
+  // reply to user with ai response
+  await ctx.reply("AI: " + response);
+});
 
 // callback handlers
 bot.callbackQuery("ai-therapist", aiTherapistHandler);
 
 bot.start();
+console.log("Bot started");
